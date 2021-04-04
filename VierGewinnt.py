@@ -68,7 +68,7 @@ def win(PlayerSymbole, x,y):
     # look cross
     # /
     inRow = 1
-    # Geht von unten links nach oben rechts
+    # Goes from bottom left to top right
     try :
         if plist[y-1][x] == plist[y-2][x+1]:
             inRow += 1
@@ -82,7 +82,7 @@ def win(PlayerSymbole, x,y):
             except: pass
     except: pass
 
-    # Geht von oben rechts nach unten links
+    # Goes from top right to bottom left
     try:
         if plist[y-1][x] == plist[y][x-1]:
             inRow += 1
@@ -99,7 +99,7 @@ def win(PlayerSymbole, x,y):
         winn = True
     # \
     inRow = 1
-    # Geht von links nach unten rechts
+    # Goes from left to bottom right
     try:
         if plist[y-1][x] == plist[y][x+1]:
             inRow += 1
@@ -113,7 +113,7 @@ def win(PlayerSymbole, x,y):
             except: pass
     except: pass
 
-    # Geht von unten rechts nach oben links
+    # Goes from bottom right to top left
     try:
         if plist[y-1][x] == plist[y-2][x-1]:
             inRow += 1
@@ -191,11 +191,11 @@ def place(nowPlayer,x):
 
 
 class MyClient(discord.Client):
-    # Einloggen
+    # logging in
     async def on_ready(self):
-        print("Ich habe mich eingeloggt.")
+        print("Ready")
 
-    # Wenn Nachricht gepostet wird
+    # on message
     async def on_message(self, message):
         if message.author == client.user:
             return
@@ -206,23 +206,23 @@ class MyClient(discord.Client):
             PlayerLog.clear()
             PlayerLog.append(None)
             FullMap = MapText()
-            await message.channel.send('Spielfeld ist geräumt')
+            await message.channel.send('New game')
             await message.channel.send(f"```{FullMap}```")
 
         elif message.content.startswith("help"):
-            await message.channel.send('Say "$4 [x]" to play \n Say clear to start a new game')
+            await message.channel.send('Say "$4 [x]" to play \n Say $lear to start a new game')
 
         elif message.content.startswith("$4"):
             if message.author == PlayerLog[0]:
-                await message.channel.send("Warte! Dein gegner hat seinen zug noch nicht gemacht.")
+                await message.channel.send("Wait! Your oppesit hasen't finished his turn.
                 return
             else:
                 try:place_x = message.content.split(' ')[1]
                 except:place_x = message.content.split('4')[1]
                 place(message.author,place_x)
-                try: FullMap = MapText([f"{emoji.green} {Player[0]}", "Spielt gegen",f"{emoji.red} {Player[1]}", f"{PlayerLog[0]} ist am zug"])
+                try: FullMap = MapText([f"{emoji.green} {Player[0]}", "play vs",f"{emoji.red} {Player[1]}", f"it's {PlayerLog[0]} turn"])
                 except: FullMap = MapText("")
-                try: await message.channel.send(f"```{FullMap} {winner[0]} {winner[1]} hat gewonnen```")
+                try: await message.channel.send(f"```{FullMap} {winner[0]} {winner[1]} won this game!```")
                 except: await message.channel.send(f"```{FullMap}```")
                 PlayerLog.clear()
                 PlayerLog.append(message.author)
